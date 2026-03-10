@@ -4,7 +4,8 @@ from lexer import Lexer
 from parser import Parser
 from ast_nodos import (
     NodoAST, Literal, Variable, Asignacion, 
-    Bloque, BucleWhile, Condicional, Funcion, ExpresionBinaria, Retorno
+    Bloque, BucleWhile, Condicional, Funcion, ExpresionBinaria, 
+    Retorno, Impresion, Entrada 
 )
 
 class AppParser(ctk.CTk):
@@ -133,6 +134,11 @@ class AppParser(ctk.CTk):
         if isinstance(nodo, BucleWhile): return [nodo.condicion, nodo.cuerpo]
         if isinstance(nodo, ExpresionBinaria): return [nodo.izquierda, nodo.derecha]
         if isinstance(nodo, Retorno): return [nodo.valor]
+        
+        if isinstance(nodo, Impresion): return [nodo.valor]
+        if isinstance(nodo, Entrada): return []
+        
+        
         if isinstance(nodo, (Asignacion, Funcion)):
             return [nodo.valor if hasattr(nodo, 'valor') else nodo.cuerpo]
         return []
@@ -184,6 +190,8 @@ class AppParser(ctk.CTk):
         if isinstance(nodo, Funcion): return {'txt': f"FUNC:\n{nodo.nombre}", 'col': "#3498db"}
         if isinstance(nodo, Retorno): return {'txt': "RETURN", 'col': "#e67e22"}
         if isinstance(nodo, ExpresionBinaria): return {'txt': f"OP: {nodo.operador}", 'col': "#34495e"}
+        if isinstance(nodo, Impresion): return {'txt': "COUT <<", 'col': "#2980b9"} 
+        if isinstance(nodo, Entrada): return {'txt': f"CIN >>\n({nodo.target})", 'col': "#d35400"} 
         return {'txt': type(nodo).__name__.upper(), 'col': "#3498db"}
 
 if __name__ == "__main__":

@@ -10,7 +10,9 @@ class Lexer:
         self.posicion = 0
         self._keywords = {
             'int': TokenType.INT_TYPE, 'float': TokenType.FLOAT_TYPE, 'string': TokenType.STR_TYPE, 'void': TokenType.VOID_TYPE,
-            'if': TokenType.IF, 'else': TokenType.ELSE, 
+            'if': TokenType.IF, 'else': TokenType.ELSE,
+            'cin': TokenType.CIN,
+            'cout': TokenType.COUT,
             'while': TokenType.WHILE, 'def': TokenType.DEF,
             'return': TokenType.RETURN
         }
@@ -27,6 +29,8 @@ class Lexer:
             (r'==', TokenType.EQ),
             (r'>=', TokenType.GE),
             (r'<=', TokenType.LE),
+            (r'<<', TokenType.LSHIFT),
+            (r'>>', TokenType.RSHIFT),
             (r'>', TokenType.GT),
             (r'<', TokenType.LT),
             (r'=', TokenType.ASSIGN),

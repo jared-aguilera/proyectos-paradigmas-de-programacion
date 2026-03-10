@@ -41,6 +41,11 @@ class TokenType(Enum):
     WHILE = "MIENTRAS"
     DEF = "DEFINIR"
     RETURN = "RETORNO"
+    CIN = "CIN"
+    COUT = "COUT"
+    
+    LSHIFT = "DESPLAZAMIENTO_IZQ"
+    RSHIFT = "DESPLAZAMIENTO_DER" 
     
     EOF = "FIN_ARCHIVO"
     UNKNOWN = "DESCONOCIDO"

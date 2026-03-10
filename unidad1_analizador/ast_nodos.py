@@ -76,3 +76,13 @@ class Funcion(NodoAST):
 class Retorno(NodoAST):
     """ Representa la instrucción return """
     valor: NodoAST
+    
+@dataclass
+class Impresion(NodoAST):
+    """ Nodo para cout << """
+    valor: NodoAST
+
+@dataclass
+class Entrada(NodoAST):
+    """ Nodo para cin >> """
+    target: str

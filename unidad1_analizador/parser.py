@@ -38,6 +38,9 @@ class Parser:
         if tipo == TokenType.WHILE: return self._while()
         if tipo == TokenType.RETURN: return self._retorno()
         
+        if tipo == TokenType.COUT: return self._impresion()
+        if tipo == TokenType.CIN: return self._entrada()
+        
         if tipo in [TokenType.INT_TYPE, TokenType.FLOAT_TYPE, TokenType.STR_TYPE, TokenType.IDENTIFIER]: 
             return self._asignacion()
         raise Exception(f"Línea no reconocida: {self._actual()[1]}")
@@ -150,3 +153,17 @@ class Parser:
         valor = self._expresion()
         self._consumir(TokenType.SEMICOLON) 
         return Retorno(valor)
+    
+    def _impresion(self):
+        self.pos += 1  # Salta 'cout'
+        self._consumir(TokenType.LSHIFT)
+        valor = self._expresion()
+        self._consumir(TokenType.SEMICOLON)
+        return Impresion(valor)
+
+    def _entrada(self):
+        self.pos += 1  # Salta 'cin'
+        self._consumir(TokenType.RSHIFT)
+        nombre = self._consumir(TokenType.IDENTIFIER)[1]
+        self._consumir(TokenType.SEMICOLON)
+        return Entrada(nombre)
