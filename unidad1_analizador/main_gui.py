@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from tkinter import Canvas
+from tkinter import Canvas, filedialog
 from lexer import Lexer
 from parser import Parser
 from ast_nodos import (
@@ -43,6 +43,13 @@ class AppParser(ctk.CTk):
             font=("Roboto", 14, "bold", ), command=self.ejecutar_analisis, text_color="black"
         )
         self.btn_validar.pack(pady=10, padx=20, fill="x")
+        
+        self.btn_cargar = ctk.CTkButton(
+            self.sidebar, text="Cargar Archivo", 
+            fg_color="#3498db", hover_color="#2980b9",
+            font=("Roboto", 14, "bold"), command=self.cargar_archivo, text_color="white"
+        )
+        self.btn_cargar.pack(pady=5, padx=20, fill="x")
 
         self.txt_codigo = ctk.CTkTextbox(
             self.sidebar, font=("Consolas", 13), width=350,
@@ -193,6 +200,24 @@ class AppParser(ctk.CTk):
         if isinstance(nodo, Impresion): return {'txt': "COUT <<", 'col': "#2980b9"} 
         if isinstance(nodo, Entrada): return {'txt': f"CIN >>\n({nodo.target})", 'col': "#d35400"} 
         return {'txt': type(nodo).__name__.upper(), 'col': "#3498db"}
+    
+    def cargar_archivo(self):
+        """ Abre el explorador de archivos y carga el contenido en el editor """
+        archivo = filedialog.askopenfilename(
+            title="Seleccionar archivo de C++",
+            filetypes=(("Archivos C++", "*.cpp *.h *.txt"), ("Todos los archivos", "*.*"))
+        )
+        
+        if archivo:
+            try:
+                with open(archivo, "r", encoding="utf-8") as f:
+                    contenido = f.read()
+                    
+                    self.txt_codigo.delete("0.0", "end")
+                    self.txt_codigo.insert("0.0", contenido)
+            except Exception as e:
+                
+                print(f"Error al cargar: {e}")
 
 if __name__ == "__main__":
     app = AppParser()
