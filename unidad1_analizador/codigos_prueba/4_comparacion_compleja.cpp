@@ -1,4 +1,4 @@
-def sistemaLogico(a) {
+void sistemaLogico(a) {
     int x = 50;
     int limite = 100;
     if (x < limite) {

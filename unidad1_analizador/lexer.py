@@ -9,7 +9,7 @@ class Lexer:
         self.codigo = codigo
         self.posicion = 0
         self._keywords = {
-            'int': TokenType.INT_TYPE, 'float': TokenType.FLOAT_TYPE, 'string': TokenType.STR_TYPE,
+            'int': TokenType.INT_TYPE, 'float': TokenType.FLOAT_TYPE, 'string': TokenType.STR_TYPE, 'void': TokenType.VOID_TYPE,
             'if': TokenType.IF, 'else': TokenType.ELSE, 
             'while': TokenType.WHILE, 'def': TokenType.DEF,
             'return': TokenType.RETURN

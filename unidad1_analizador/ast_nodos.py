@@ -71,3 +71,8 @@ class Funcion(NodoAST):
     nombre: str
     parametros: List[str]
     cuerpo: Bloque
+
+@dataclass
+class Retorno(NodoAST):
+    """ Representa la instrucción return """
+    valor: NodoAST

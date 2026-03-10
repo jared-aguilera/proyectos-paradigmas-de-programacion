@@ -2,12 +2,13 @@ from enum import Enum
 
 class TokenType(Enum):
     """
-    Define los tokens para C++ / Python
+    Define los tokens para C++
     """
     # Tipos y Literales
     INT_TYPE = "TIPO_ENTERO"
     FLOAT_TYPE = "TIPO_FLOAT"
     STR_TYPE = "TIPO_CADENA"
+    VOID_TYPE = "TIPO_VOID"
     BOOL_TYPE = "TIPO_BOOLEANO"
     IDENTIFIER = "IDENTIFICADOR"
     NUMBER = "NUMERO"

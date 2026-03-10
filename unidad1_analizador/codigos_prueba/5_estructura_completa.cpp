@@ -1,4 +1,4 @@
-def procesoPrincipal(x) {
+void procesoPrincipal(x) {
     int total = 0;
     int control = 5;
     while (control > 0) {

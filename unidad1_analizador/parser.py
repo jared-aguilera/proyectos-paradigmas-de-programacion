@@ -28,15 +28,22 @@ class Parser:
 
     def _sentencia(self):
         tipo = self._actual()[0]
-        if tipo == TokenType.DEF: return self._funcion()
+        # if tipo == TokenType.DEF: return self._funcion()
+        if tipo in [TokenType.INT_TYPE, TokenType.FLOAT_TYPE, TokenType.STR_TYPE, TokenType.VOID_TYPE]:
+            if self.pos + 2 < len(self.tokens) and self.tokens[self.pos + 2][0] == TokenType.LPAREN:
+                return self._funcion()
+            return self._asignacion()
+        
         if tipo == TokenType.IF: return self._if_else()
         if tipo == TokenType.WHILE: return self._while()
+        if tipo == TokenType.RETURN: return self._retorno()
+        
         if tipo in [TokenType.INT_TYPE, TokenType.FLOAT_TYPE, TokenType.STR_TYPE, TokenType.IDENTIFIER]: 
             return self._asignacion()
         raise Exception(f"Línea no reconocida: {self._actual()[1]}")
 
     def _asignacion(self):
-        if self._actual()[0] in [TokenType.INT_TYPE, TokenType.FLOAT_TYPE, TokenType.STR_TYPE]: 
+        if self._actual()[0] in [TokenType.INT_TYPE, TokenType.FLOAT_TYPE, TokenType.STR_TYPE, TokenType.VOID_TYPE]: 
             self.pos += 1
         
         nombre = self._consumir(TokenType.IDENTIFIER)[1]
@@ -137,3 +144,9 @@ class Parser:
         while self._actual()[0] not in [TokenType.RBRACE, TokenType.EOF]:
             sentencias.append(self._sentencia())
         return Bloque(sentencias)
+    
+    def _retorno(self):
+        self.pos += 1  
+        valor = self._expresion()
+        self._consumir(TokenType.SEMICOLON) 
+        return Retorno(valor)
