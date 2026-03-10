@@ -143,21 +143,21 @@ class AppParser(ctk.CTk):
         if nodo is None: return
 
         hijos = self._obtener_hijos(nodo)
-        dist_y = 120 # Distancia vertical fija
+        dist_y = 120 
         y_hijo = y + dist_y
 
         if hijos:
-            # Calculamos el ancho total de este nivel
+
             ancho_total = self._get_ancho_subarbol(nodo)
-            # El punto de inicio a la izquierda es x menos la mitad del ancho total
+
             x_cursor = x - (ancho_total / 2)
 
             for hijo in hijos:
                 ancho_hijo = self._get_ancho_subarbol(hijo)
-                # El hijo se centra en su propia porción de ancho
+
                 x_hijo = x_cursor + (ancho_hijo / 2)
                 
-                # Color de línea según contexto
+                # Color de las lineas
                 color_linea = "#555"
                 if isinstance(nodo, Condicional) and hijo == nodo.condicion: 
                     color_linea = "#f1c40f" # Condición en amarillo
@@ -165,10 +165,9 @@ class AppParser(ctk.CTk):
                 self.canvas.create_line(x, y, x_hijo, y_hijo, fill=color_linea, width=2)
                 self._dibujar_nodo_dinamico(hijo, x_hijo, y_hijo)
                 
-                # Movemos el cursor para el siguiente hijo
                 x_cursor += ancho_hijo
 
-        # Dibujar el círculo (después de las líneas para que quede arriba)
+        # Dibujar circulos
         estilo = self._obtener_estilo(nodo)
         r = 34
         self.canvas.create_oval(x-r, y-r, x+r, y+r, fill=estilo['col'], outline="white", width=2)
