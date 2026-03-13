@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Estructuras de Datos - Paradigmas</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background: #ececec; padding: 20px; }
+        .main-container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .controls { margin-bottom: 20px; padding: 15px; border-bottom: 2px solid #eee; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+        input { padding: 10px; border: 2px solid #ddd; border-radius: 5px; outline: none; }
+        button { padding: 10px 18px; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; transition: 0.3s; }
+        .btn-add { background: #27ae60; color: white; }
+        .btn-rec { background: #3498db; color: white; }
+        .btn-del { background: #e74c3c; color: white; }
+        .btn-json { background: #9b59b6; color: white; }
+        .btn-math { background: #f39c12; color: white; }
+        .btn-clear { background: #95a5a6; color: white; }
+        canvas { background: #fafafa; border: 1px solid #ddd; border-radius: 8px; display: block; margin: 0 auto; cursor: default; }
+        .caja-resultados { margin-top: 25px; background: #2c3e50; color: #ecf0f1; padding: 20px; border-radius: 8px; text-align: left; min-height: 60px; }
+        #lista-nodos { font-family: 'Courier New', Courier, monospace; font-size: 1.2em; margin-top: 10px; }
+        .current-val { color: #f1c40f; font-weight: bold; text-decoration: underline; }
+        .info-panel { font-size: 0.85em; color: #7f8c8d; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <h2>Visualizador de arboles (AVL y Matematicos)</h2>
+    
+    <div class="controls">
+        <input type="text" id="nodoValor" placeholder="Ingresa valor" onkeypress="if(event.key==='Enter') agregarNodo()">
+        <button class="btn-add" onclick="agregarNodo()">Insertar</button>
+        <button class="btn-math" onclick="procesarExpresion()">Generar arbol Matematico</button>
+        <button class="btn-json" onclick="document.getElementById('inputJson').click()">Cargar JSON</button>
+        <input type="file" id="inputJson" style="display:none" accept=".json" onchange="cargarJSON(event)">
+        <button class="btn-clear" onclick="reiniciar()">Reiniciar</button>
+    </div>
+
+    <div class="controls">
+        <b>Recorridos:</b>
+        <button class="btn-rec" onclick="iniciarRecorrido('pre')">Preorden</button>
+        <button class="btn-rec" onclick="iniciarRecorrido('in')">Inorden</button>
+        <button class="btn-rec" onclick="iniciarRecorrido('post')">Postorden</button>
+        <button class="btn-rec" onclick="iniciarRecorrido('bfs')">Anchura (BFS)</button>
+        <button class="btn-rec" onclick="iniciarRecorrido('dfs')">Profundidad (DFS)</button>
+    </div>
+
+    <canvas id="lienzo" width="900" height="450"></canvas>
+
+    <div class="caja-resultados">
+        <div id="tipo-recorrido">Resultado del recorrido</div>
+        <div id="lista-nodos">Esperando....</div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
