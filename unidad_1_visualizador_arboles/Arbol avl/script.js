@@ -166,8 +166,17 @@ function cargarJSON(e) {
     reader.onload = (ev) => {
         const data = JSON.parse(ev.target.result);
         reiniciar();
-        data.forEach(v => raiz = insertarAVL(raiz, v));
-        actualizarYDibujar();
+        
+        if (data.expresion) {
+            document.getElementById('nodoValor').value = data.expresion;
+            procesarExpresion();
+        } else if (Array.isArray(data)) {
+            modoMatematico = false;
+            data.forEach(v => {
+                raiz = insertarAVL(raiz, v);
+            });
+            actualizarYDibujar();
+        }
     };
     reader.readAsText(e.target.files[0]);
 }
