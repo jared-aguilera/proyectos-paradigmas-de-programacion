@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Actividad Paradigmas de Programacion</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background: #ececec; padding: 20px; }
+        .main-container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .controls { margin-bottom: 20px; padding: 15px; border-bottom: 2px solid #eee; }
+        input[type="number"] { padding: 10px; width: 80px; border: 2px solid #ddd; border-radius: 5px; outline: none; }
+        button { padding: 10px 18px; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; margin: 4px; transition: 0.3s; }
+        .btn-add { background: #27ae60; color: white; }
+        .btn-rec { background: #3498db; color: white; }
+        .btn-clear { background: #95a5a6; color: white; }
+        canvas { background: #fafafa; border: 1px solid #ddd; border-radius: 8px; display: block; margin: 0 auto; cursor: grab; }
+        canvas:active { cursor: grabbing; }
+        .caja-resultados { margin-top: 25px; background: #2c3e50; color: #ecf0f1; padding: 20px; border-radius: 8px; text-align: left; }
+        #lista-nodos { font-family: 'Courier New', Courier, monospace; font-size: 1.3em; letter-spacing: 2px; }
+        .current-val { color: #f1c40f; text-decoration: underline; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <h2>Arbol Binario de Busqueda</h2>
+    <div class="controls">
+        <input type="number" id="nodoValor" placeholder="Valor">
+        <button class="btn-add" onclick="agregarNodo()">Insertar Nodo</button>
+        <button class="btn-clear" onclick="reiniciar()">Reiniciar</button>
+        <br><br>
+        <b>Recorridos:</b>
+        <button class="btn-rec" onclick="iniciarRecorrido('pre')">Preorden</button>
+        <button class="btn-rec" onclick="iniciarRecorrido('in')">Inorden</button>
+        <button class="btn-rec" onclick="iniciarRecorrido('post')">Postorden</button>
+        <button class="btn-del" onclick="EliminarRecorrido('del')">Eliminar Nodo</button>
+    </div>
+    <canvas id="lienzo" width="800" height="450"></canvas>
+    <div class="caja-resultados">
+        <span id="tipo-recorrido">Resultado del Recorrido</span>
+        <div id="lista-nodos">Esperando....</div>
+    </div>
+</div>
+<script>
+    const canvas = document.getElementById('lienzo');
+    const ctx = canvas.getContext('2d');
+    let raiz = null;
+    let nodosExistentes = new Set();
+    let escala = 1;
+    let origenX = 0;
+    let origenY = 0;
+    let estaArrastrando = false;
+    let ultimaPosMouse = { x: 0, y: 0 };
+    class Nodo {
+        constructor(valor, x, y) {
+            this.valor = valor;
+            this.izq = null;
+            this.der = null;
+            this.x = x;
+            this.y = y;
+            this.color = "white";
+        }
+    }
+    canvas.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const factor = e.deltaY > 0 ? 0.9 : 1.1;
+        escala *= factor;
+        dibujar();
+    }, { passive: false });
+
+    canvas.addEventListener('mousedown', (e) => {
+        estaArrastrando = true;
+        ultimaPosMouse = { x: e.clientX, y: e.clientY };
+    });
+    window.addEventListener('mousemove', (e) => {
+        if (!estaArrastrando) return;
+        origenX += e.clientX - ultimaPosMouse.x;
+        origenY += e.clientY - ultimaPosMouse.y;
+        ultimaPosMouse = { x: e.clientX, y: e.clientY };
+        dibujar();
+    });
+
+    window.addEventListener('mouseup', () => { estaArrastrando = false; });
+    function agregarNodo() {
+        const input = document.getElementById('nodoValor');
+        const val = parseInt(input.value);
+        if (isNaN(val) || nodosExistentes.has(val)) {
+            input.value = ''; return;
+        }
+        nodosExistentes.add(val);
+        if (!raiz) raiz = new Nodo(val, canvas.width / 2, 50);
+        else insertar(raiz, val, canvas.width / 2, 50, canvas.width / 4);
+        dibujar();
+        input.value = '';
+    }
+    function insertar(n, val, x, y, offset) {
+        if (val < n.valor) {
+            if (!n.izq) n.izq = new Nodo(val, x - offset, y + 80);
+            else insertar(n.izq, val, n.izq.x, n.izq.y, offset / 1.8);
+        } else {
+            if (!n.der) n.der = new Nodo(val, x + offset, y + 80);
+            else insertar(n.der, val, n.der.x, n.der.y, offset / 1.8);
+        }
+    }
+    function dibujar() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.translate(origenX, origenY);
+        ctx.scale(escala, escala);
+        if (raiz) { dibujarLineas(raiz); dibujarCirculos(raiz); }
+        ctx.restore();
+    }
+
+    function dibujarLineas(n) {
+        ctx.strokeStyle = "#bdc3c7";
+        if (n.izq) {
+            ctx.beginPath(); ctx.moveTo(n.x, n.y); ctx.lineTo(n.izq.x, n.izq.y); ctx.stroke();
+            dibujarLineas(n.izq);
+        }
+        if (n.der) {
+            ctx.beginPath(); ctx.moveTo(n.x, n.y); ctx.lineTo(n.der.x, n.der.y); ctx.stroke();
+            dibujarLineas(n.der);
+        }
+    }
+    function dibujarCirculos(n) {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 20, 0, 7);
+        ctx.fillStyle = n.color;
+        ctx.fill();
+        ctx.strokeStyle = "#2c3e50";
+        ctx.stroke();
+        ctx.fillStyle = n.color === "white" ? "black" : "white";
+        ctx.font = "bold 14px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(n.valor, n.x, n.y + 5);
+        if (n.izq) dibujarCirculos(n.izq);
+        if (n.der) dibujarCirculos(n.der);
+    }
+
+    async function iniciarRecorrido(tipo) {
+        if (!raiz) return;
+        limpiarColores(raiz);
+        let orden = [];
+        if (tipo === 'pre') pre(raiz, orden);
+        if (tipo === 'in') ino(raiz, orden);
+        if (tipo === 'post') pos(raiz, orden);
+        
+        const listaDiv = document.getElementById('lista-nodos');
+        listaDiv.innerHTML = "";
+        for (let n of orden) {
+            n.color = "#e67e22"; dibujar();
+            let span = document.createElement("span");
+            span.innerText = n.valor + " ";
+            span.className = "current-val";
+            listaDiv.appendChild(span);
+            await new Promise(r => setTimeout(r, 600));
+            n.color = "#3498db"; span.className = ""; dibujar();
+        }
+    }
+
+    function pre(n, l) { if(n){ l.push(n); pre(n.izq, l); pre(n.der, l); } }
+    function ino(n, l) { if(n){ ino(n.izq, l); l.push(n); ino(n.der, l); } }
+    function pos(n, l) { if(n){ pos(n.izq, l); pos(n.der, l); l.push(n); } }
+    function limpiarColores(n) { if(n){ n.color="white"; limpiarColores(n.izq); limpiarColores(n.der); } }
+    function reiniciar() { 
+        raiz = null; nodosExistentes.clear(); 
+        escala = 1; origenX = 0; origenY = 0;
+        dibujar();
+    }
+</script>
+</body>
+</html>
+
