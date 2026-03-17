@@ -52,12 +52,12 @@ function insertarAVL(nodo, valor) {
     let balance = getBalance(nodo);
     if (balance > 1 && valor < nodo.izq.valor) return rotarDerecha(nodo);
     if (balance < -1 && valor > nodo.der.valor) return rotarIzquierda(nodo);
-    if (balance > 1 && valor > nodo.izq.valor) {
-        nodo.izq = rotarIzquierda(nodo.izq);
+    if (balance > 1 && valor > nodo.izq.valor) {  //el peso esta en el hijo izquierdo pero nieto derecho
+        nodo.izq = rotarIzquierda(nodo.izq); //primero rotamos a la izquiera, luego a la derecha el apdre
         return rotarDerecha(nodo);
     }
-    if (balance < -1 && valor < nodo.der.valor) {
-        nodo.der = rotarDerecha(nodo.der);
+    if (balance < -1 && valor < nodo.der.valor) { //el peso esta en el hijo derecho pero nieto izquierdo
+        nodo.der = rotarDerecha(nodo.der); //la inversa del de arriba
         return rotarIzquierda(nodo);
     }
     return nodo;
