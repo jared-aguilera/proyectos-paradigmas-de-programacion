@@ -140,7 +140,7 @@ function procesarExpresion() {
     const salida = [], operadores = [];
 
     tokens.forEach(t => {
-        // Ahora acepta cualquier combinación de letras o números como nodo hoja
+        
         if (/[a-zA-Z0-9]/.test(t)) {
             salida.push(new Nodo(t));
         } else if (t === '(') {
