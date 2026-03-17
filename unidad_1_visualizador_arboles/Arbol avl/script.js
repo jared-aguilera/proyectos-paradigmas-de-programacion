@@ -132,14 +132,20 @@ function procesarExpresion() {
     const exp = document.getElementById('nodoValor').value;
     if (!exp) return;
     modoMatematico = true;
-    const tokens = exp.replace(/\s+/g, '').match(/\d+|[+*/()-]/g);
+    
+    const tokens = exp.replace(/\s+/g, '').match(/[a-zA-Z0-9]+|[+*/()-]/g);
     if (!tokens) return;
+
     const prioritizar = (op) => (op === '+' || op === '-') ? 1 : (op === '*' || op === '/') ? 2 : 0;
     const salida = [], operadores = [];
+
     tokens.forEach(t => {
-        if (/\d+/.test(t)) salida.push(new Nodo(t));
-        else if (t === '(') operadores.push(t);
-        else if (t === ')') {
+        // Ahora acepta cualquier combinación de letras o números como nodo hoja
+        if (/[a-zA-Z0-9]/.test(t)) {
+            salida.push(new Nodo(t));
+        } else if (t === '(') {
+            operadores.push(t);
+        } else if (t === ')') {
             while (operadores.length && operadores[operadores.length-1] !== '(') {
                 let n = new Nodo(operadores.pop());
                 n.der = salida.pop(); n.izq = salida.pop(); salida.push(n);
@@ -153,6 +159,7 @@ function procesarExpresion() {
             operadores.push(t);
         }
     });
+
     while (operadores.length) {
         let n = new Nodo(operadores.pop());
         n.der = salida.pop(); n.izq = salida.pop(); salida.push(n);
