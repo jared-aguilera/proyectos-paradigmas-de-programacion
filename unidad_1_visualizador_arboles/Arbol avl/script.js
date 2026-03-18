@@ -129,32 +129,63 @@ function agregarNodo() {
 }
 
 function procesarExpresion() {
-    const exp = document.getElementById('nodoValor').value;
+    let exp = document.getElementById('nodoValor').value;
     if (!exp) return;
     modoMatematico = true;
-    
-    const tokens = exp.replace(/\s+/g, '').match(/[a-zA-Z0-9]+|[+*/()-]/g);
+
+    // Detectar variables
+    let variables = exp.match(/[a-zA-Z]/g);
+    variables = variables ? [...new Set(variables)] : [];
+    let valores = {};
+
+    // Preguntar valores
+    variables.forEach(v => {
+        let val = prompt(`¿Qué valor quieres darle a ${v}?`);
+        valores[v] = parseFloat(val);
+    });
+
+    // Reemplazar variables
+    for (let v in valores) {
+        let regex = new RegExp(v, 'g');
+        exp = exp.replace(regex, valores[v]);
+    }
+
+    // ✅ TOKENIZACIÓN CORRECTA
+    const tokens = exp.replace(/\s+/g, '').match(/[0-9]+|[a-zA-Z]+|[\^+*/()-]/g);
     if (!tokens) return;
 
-    const prioritizar = (op) => (op === '+' || op === '-') ? 1 : (op === '*' || op === '/') ? 2 : 0;
+    const prioridad = (op) => {
+        if (op === '+' || op === '-') return 1;
+        if (op === '*' || op === '/') return 2;
+        if (op === '^') return 3;
+        return 0;
+    };
+
     const salida = [], operadores = [];
 
     tokens.forEach(t => {
-        
-        if (/[a-zA-Z0-9]/.test(t)) {
+        // ✅ ACEPTA VARIABLES Y NÚMEROS
+        if (/^[a-zA-Z0-9]+$/.test(t)) {
             salida.push(new Nodo(t));
         } else if (t === '(') {
             operadores.push(t);
         } else if (t === ')') {
-            while (operadores.length && operadores[operadores.length-1] !== '(') {
+            while (operadores.length && operadores[operadores.length - 1] !== '(') {
                 let n = new Nodo(operadores.pop());
-                n.der = salida.pop(); n.izq = salida.pop(); salida.push(n);
+                n.der = salida.pop();
+                n.izq = salida.pop();
+                salida.push(n);
             }
             operadores.pop();
         } else {
-            while (operadores.length && prioritizar(operadores[operadores.length-1]) >= prioritizar(t)) {
+            while (
+                operadores.length &&
+                prioridad(operadores[operadores.length - 1]) >= prioridad(t)
+            ) {
                 let n = new Nodo(operadores.pop());
-                n.der = salida.pop(); n.izq = salida.pop(); salida.push(n);
+                n.der = salida.pop();
+                n.izq = salida.pop();
+                salida.push(n);
             }
             operadores.push(t);
         }
@@ -162,8 +193,11 @@ function procesarExpresion() {
 
     while (operadores.length) {
         let n = new Nodo(operadores.pop());
-        n.der = salida.pop(); n.izq = salida.pop(); salida.push(n);
+        n.der = salida.pop();
+        n.izq = salida.pop();
+        salida.push(n);
     }
+
     raiz = salida[0];
     actualizarYDibujar();
 }
@@ -174,10 +208,18 @@ function cargarJSON(e) {
         const data = JSON.parse(ev.target.result);
         reiniciar();
         
-        if (data.expresion) {
+        // 🔹 NUEVO
+        if (Array.isArray(data) && typeof data[0] === "string") {
+            document.getElementById('nodoValor').value = data[0];
+            procesarExpresion();
+        }
+
+        // 🔹 LO QUE YA TENÍAS (NO SE BORRA)
+        else if (data.expresion) {
             document.getElementById('nodoValor').value = data.expresion;
             procesarExpresion();
-        } else if (Array.isArray(data)) {
+        } 
+        else if (Array.isArray(data)) {
             modoMatematico = false;
             data.forEach(v => {
                 raiz = insertarAVL(raiz, v);
@@ -187,7 +229,6 @@ function cargarJSON(e) {
     };
     reader.readAsText(e.target.files[0]);
 }
-
 canvas.addEventListener('click', (e) => {
     const rect = canvas.getBoundingClientRect();
     const mx = (e.clientX - rect.left - origenX) / escala;
