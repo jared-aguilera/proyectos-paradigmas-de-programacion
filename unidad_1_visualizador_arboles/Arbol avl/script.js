@@ -20,8 +20,13 @@ class Nodo {
     }
 }
 
-function getAltura(n) { return n ? n.altura : 0; }
-function getBalance(n) { return n ? getAltura(n.izq) - getAltura(n.der) : 0; }
+function getAltura(n) {
+    return n ? n.altura : 0;
+}
+
+function getBalance(n) {
+    return n ? getAltura(n.izq) - getAltura(n.der) : 0;
+}
 
 function rotarDerecha(y) {
     let x = y.izq;
@@ -45,19 +50,31 @@ function rotarIzquierda(x) {
 
 function insertarAVL(nodo, valor) {
     if (!nodo) return new Nodo(valor);
-    if (valor < nodo.valor) nodo.izq = insertarAVL(nodo.izq, valor);
-    else if (valor > nodo.valor) nodo.der = insertarAVL(nodo.der, valor);
-    else return nodo;
+    if (valor < nodo.valor) {
+        nodo.izq = insertarAVL(nodo.izq, valor);
+    } else if (valor > nodo.valor) {
+        nodo.der = insertarAVL(nodo.der, valor);
+    } else {
+        return nodo;
+    }
     nodo.altura = 1 + Math.max(getAltura(nodo.izq), getAltura(nodo.der));
     let balance = getBalance(nodo);
-    if (balance > 1 && valor < nodo.izq.valor) return rotarDerecha(nodo);
-    if (balance < -1 && valor > nodo.der.valor) return rotarIzquierda(nodo);
-    if (balance > 1 && valor > nodo.izq.valor) {  //el peso esta en el hijo izquierdo pero nieto derecho
-        nodo.izq = rotarIzquierda(nodo.izq); //primero rotamos a la izquiera, luego a la derecha el apdre
+    // Caso izquierda-izquierda
+    if (balance > 1 && valor < nodo.izq.valor) {
         return rotarDerecha(nodo);
     }
-    if (balance < -1 && valor < nodo.der.valor) { //el peso esta en el hijo derecho pero nieto izquierdo
-        nodo.der = rotarDerecha(nodo.der); //la inversa del de arriba
+    // Caso derecha-derecha
+    if (balance < -1 && valor > nodo.der.valor) {
+        return rotarIzquierda(nodo);
+    }
+    // Caso izquierda-derecha
+    if (balance > 1 && valor > nodo.izq.valor) {
+        nodo.izq = rotarIzquierda(nodo.izq);
+        return rotarDerecha(nodo);
+    }
+    // Caso derecha-izquierda
+    if (balance < -1 && valor < nodo.der.valor) {
+        nodo.der = rotarDerecha(nodo.der);
         return rotarIzquierda(nodo);
     }
     return nodo;
@@ -65,14 +82,23 @@ function insertarAVL(nodo, valor) {
 
 function eliminarAVL(nodo, valor) {
     if (!nodo) return nodo;
-    if (valor < nodo.valor) nodo.izq = eliminarAVL(nodo.izq, valor);
-    else if (valor > nodo.valor) nodo.der = eliminarAVL(nodo.der, valor);
-    else {
+    if (valor < nodo.valor) {
+        nodo.izq = eliminarAVL(nodo.izq, valor);
+    } else if (valor > nodo.valor) {
+        nodo.der = eliminarAVL(nodo.der, valor);
+    } else {
+        // Nodo encontrado
         if (!nodo.izq || !nodo.der) {
+            // Tiene uno o ningun hijo
             let temp = nodo.izq ? nodo.izq : nodo.der;
-            if (!temp) { temp = nodo; nodo = null; }
-            else nodo = temp;
+            if (!temp) {
+                temp = nodo;
+                nodo = null;
+            } else {
+                nodo = temp;
+            }
         } else {
+            // Tiene dos hijos: obtener el sucesor inorder (menor del subarbol derecho)
             let temp = (function(n) {
                 let curr = n;
                 while (curr.izq !== null) curr = curr.izq;
@@ -85,12 +111,17 @@ function eliminarAVL(nodo, valor) {
     if (!nodo) return nodo;
     nodo.altura = 1 + Math.max(getAltura(nodo.izq), getAltura(nodo.der));
     let balance = getBalance(nodo);
-    if (balance > 1 && getBalance(nodo.izq) >= 0) return rotarDerecha(nodo);
+    // Rebalanceo despues de eliminacion
+    if (balance > 1 && getBalance(nodo.izq) >= 0) {
+        return rotarDerecha(nodo);
+    }
     if (balance > 1 && getBalance(nodo.izq) < 0) {
         nodo.izq = rotarIzquierda(nodo.izq);
         return rotarDerecha(nodo);
     }
-    if (balance < -1 && getBalance(nodo.der) <= 0) return rotarIzquierda(nodo);
+    if (balance < -1 && getBalance(nodo.der) <= 0) {
+        return rotarIzquierda(nodo);
+    }
     if (balance < -1 && getBalance(nodo.der) > 0) {
         nodo.der = rotarDerecha(nodo.der);
         return rotarIzquierda(nodo);
@@ -98,15 +129,17 @@ function eliminarAVL(nodo, valor) {
     return nodo;
 }
 
-function eliminarNodoSimple(nodo, valor) {  
-    if (!nodo) return null; 
+function eliminarNodoSimple(nodo, valor) {
+    // Eliminacion para arbol de expresion (sin rebalanceo)
+    if (!nodo) return null;
     if (valor === nodo.valor) {
         if (!nodo.izq && !nodo.der) return null;
         if (!nodo.izq) return nodo.der;
         if (!nodo.der) return nodo.izq;
+        // Tiene dos hijos: obtener sucesor inorder
         let temp = (function(n) {
             let curr = n;
-            while (curr.izq !== null) curr = curr.izq; 
+            while (curr.izq !== null) curr = curr.izq;
             return curr;
         })(nodo.der);
         nodo.valor = temp.valor;
@@ -115,7 +148,7 @@ function eliminarNodoSimple(nodo, valor) {
         nodo.izq = eliminarNodoSimple(nodo.izq, valor);
         nodo.der = eliminarNodoSimple(nodo.der, valor);
     }
-    return nodo;  
+    return nodo;
 }
 
 function agregarNodo() {
@@ -138,19 +171,19 @@ function procesarExpresion() {
     variables = variables ? [...new Set(variables)] : [];
     let valores = {};
 
-    // Preguntar valores
+    // Preguntar valores al usuario
     variables.forEach(v => {
-        let val = prompt(`¿Qué valor quieres darle a ${v}?`);
+        let val = prompt(`Que valor quieres darle a ${v}?`);
         valores[v] = parseFloat(val);
     });
 
-    // Reemplazar variables
+    // Reemplazar variables por sus valores numericos
     for (let v in valores) {
         let regex = new RegExp(v, 'g');
         exp = exp.replace(regex, valores[v]);
     }
 
-    // ✅ TOKENIZACIÓN CORRECTA
+    // Tokenizacion correcta (sin espacios)
     const tokens = exp.replace(/\s+/g, '').match(/[0-9]+|[a-zA-Z]+|[\^+*/()-]/g);
     if (!tokens) return;
 
@@ -161,10 +194,11 @@ function procesarExpresion() {
         return 0;
     };
 
-    const salida = [], operadores = [];
+    const salida = [];
+    const operadores = [];
 
     tokens.forEach(t => {
-        // ✅ ACEPTA VARIABLES Y NÚMEROS
+        // Acepta numeros y variables (aunque ya reemplazadas, podrian quedar letras)
         if (/^[a-zA-Z0-9]+$/.test(t)) {
             salida.push(new Nodo(t));
         } else if (t === '(') {
@@ -176,8 +210,9 @@ function procesarExpresion() {
                 n.izq = salida.pop();
                 salida.push(n);
             }
-            operadores.pop();
+            operadores.pop(); // quita '('
         } else {
+            // Operador
             while (
                 operadores.length &&
                 prioridad(operadores[operadores.length - 1]) >= prioridad(t)
@@ -207,18 +242,18 @@ function cargarJSON(e) {
     reader.onload = (ev) => {
         const data = JSON.parse(ev.target.result);
         reiniciar();
-        
-        // 🔹 NUEVO
+
+        // Caso nuevo: arreglo con una expresion como string
         if (Array.isArray(data) && typeof data[0] === "string") {
             document.getElementById('nodoValor').value = data[0];
             procesarExpresion();
         }
-
-        // 🔹 LO QUE YA TENÍAS (NO SE BORRA)
+        // Caso objeto con campo expresion
         else if (data.expresion) {
             document.getElementById('nodoValor').value = data.expresion;
             procesarExpresion();
-        } 
+        }
+        // Caso arreglo de numeros (arbol AVL)
         else if (Array.isArray(data)) {
             modoMatematico = false;
             data.forEach(v => {
@@ -229,24 +264,27 @@ function cargarJSON(e) {
     };
     reader.readAsText(e.target.files[0]);
 }
+
 canvas.addEventListener('click', (e) => {
     const rect = canvas.getBoundingClientRect();
     const mx = (e.clientX - rect.left - origenX) / escala;
     const my = (e.clientY - rect.top - origenY) / escala;
     const nodo = (function buscar(n) {
-        if(!n) return null;
-        if(Math.sqrt((mx-n.x)**2 + (my-n.y)**2) < 22) return n;
+        if (!n) return null;
+        if (Math.sqrt((mx - n.x) ** 2 + (my - n.y) ** 2) < 22) return n;
         return buscar(n.izq) || buscar(n.der);
     })(raiz);
     if (nodo) {
         limpiarColores(raiz);
-        nodo.color = "#f1c40f"; dibujar();
+        nodo.color = "#f1c40f";
+        dibujar();
         setTimeout(() => {
             if (confirm(`¿Eliminar nodo con valor: ${nodo.valor}?`)) {
                 raiz = modoMatematico ? eliminarNodoSimple(raiz, nodo.valor) : eliminarAVL(raiz, nodo.valor);
                 actualizarYDibujar();
             } else {
-                limpiarColores(raiz); dibujar();
+                limpiarColores(raiz);
+                dibujar();
             }
         }, 50);
     }
@@ -254,7 +292,8 @@ canvas.addEventListener('click', (e) => {
 
 function actualizarPosiciones(n, x, y, offset) {
     if (!n) return;
-    n.x = x; n.y = y;
+    n.x = x;
+    n.y = y;
     actualizarPosiciones(n.izq, x - offset, y + 70, offset / 1.9);
     actualizarPosiciones(n.der, x + offset, y + 70, offset / 1.9);
 }
@@ -267,20 +306,44 @@ function actualizarYDibujar() {
 function dibujar() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save();
-    ctx.translate(origenX, origenY); ctx.scale(escala, escala);
+    ctx.translate(origenX, origenY);
+    ctx.scale(escala, escala);
     if (raiz) {
-        (function dL(n) {
-            ctx.strokeStyle = "#bdc3c7"; ctx.lineWidth = 2;
-            if (n.izq) { ctx.beginPath(); ctx.moveTo(n.x, n.y); ctx.lineTo(n.izq.x, n.izq.y); ctx.stroke(); dL(n.izq); }
-            if (n.der) { ctx.beginPath(); ctx.moveTo(n.x, n.y); ctx.lineTo(n.der.x, n.der.y); ctx.stroke(); dL(n.der); }
+        // Dibujar lineas (conexiones)
+        (function dibujarLineas(n) {
+            ctx.strokeStyle = "#bdc3c7";
+            ctx.lineWidth = 2;
+            if (n.izq) {
+                ctx.beginPath();
+                ctx.moveTo(n.x, n.y);
+                ctx.lineTo(n.izq.x, n.izq.y);
+                ctx.stroke();
+                dibujarLineas(n.izq);
+            }
+            if (n.der) {
+                ctx.beginPath();
+                ctx.moveTo(n.x, n.y);
+                ctx.lineTo(n.der.x, n.der.y);
+                ctx.stroke();
+                dibujarLineas(n.der);
+            }
         })(raiz);
-        (function dC(n) {
-            ctx.beginPath(); ctx.arc(n.x, n.y, 22, 0, 7);
-            ctx.fillStyle = n.color; ctx.fill(); ctx.strokeStyle = "#2c3e50"; ctx.stroke();
+
+        // Dibujar circulos de los nodos
+        (function dibujarCirculos(n) {
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, 22, 0, 2 * Math.PI);
+            ctx.fillStyle = n.color;
+            ctx.fill();
+            ctx.strokeStyle = "#2c3e50";
+            ctx.stroke();
             ctx.fillStyle = n.color === "white" ? "black" : "white";
-            ctx.font = "bold 14px Arial"; ctx.textAlign = "center";
-            ctx.fillText(n.valor, n.x, n.y + 6);
-            if (n.izq) dC(n.izq); if (n.der) dC(n.der);
+            ctx.font = "bold 14px Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(n.valor, n.x, n.y);
+            if (n.izq) dibujarCirculos(n.izq);
+            if (n.der) dibujarCirculos(n.der);
         })(raiz);
     }
     ctx.restore();
@@ -290,38 +353,97 @@ async function iniciarRecorrido(tipo) {
     if (!raiz) return;
     limpiarColores(raiz);
     let orden = [];
-    if (tipo === 'pre') (function r(n){ if(n){ orden.push(n); r(n.izq); r(n.der); }})(raiz);
-    else if (tipo === 'in') (function r(n){ if(n){ r(n.izq); orden.push(n); r(n.der); }})(raiz);
-    else if (tipo === 'post') (function r(n){ if(n){ r(n.izq); r(n.der); orden.push(n); }})(raiz);
-    else if (tipo === 'bfs') {
-        let q = [raiz];
-        while(q.length){ let c = q.shift(); orden.push(c); if(c.izq) q.push(c.izq); if(c.der) q.push(c.der); }
+    if (tipo === 'pre') {
+        (function preorden(n) {
+            if (n) {
+                orden.push(n);
+                preorden(n.izq);
+                preorden(n.der);
+            }
+        })(raiz);
+    } else if (tipo === 'in') {
+        (function inorden(n) {
+            if (n) {
+                inorden(n.izq);
+                orden.push(n);
+                inorden(n.der);
+            }
+        })(raiz);
+    } else if (tipo === 'post') {
+        (function postorden(n) {
+            if (n) {
+                postorden(n.izq);
+                postorden(n.der);
+                orden.push(n);
+            }
+        })(raiz);
+    } else if (tipo === 'bfs') {
+        let cola = [raiz];
+        while (cola.length) {
+            let actual = cola.shift();
+            orden.push(actual);
+            if (actual.izq) cola.push(actual.izq);
+            if (actual.der) cola.push(actual.der);
+        }
     } else if (tipo === 'dfs') {
-        let s = [raiz];
-        while(s.length){ let c = s.pop(); orden.push(c); if(c.der) s.push(c.der); if(c.izq) s.push(c.izq); }
+        let pila = [raiz];
+        while (pila.length) {
+            let actual = pila.pop();
+            orden.push(actual);
+            if (actual.der) pila.push(actual.der);
+            if (actual.izq) pila.push(actual.izq);
+        }
     }
     const listaDiv = document.getElementById('lista-nodos');
     listaDiv.innerHTML = "";
     for (let n of orden) {
-        n.color = "#e67e22"; dibujar();
-        let s = document.createElement("span"); s.innerText = n.valor + " "; s.className = "current-val";
-        listaDiv.appendChild(s);
-        await new Promise(r => setTimeout(r, 500));
-        n.color = "#3498db"; dibujar();
+        n.color = "#e67e22";
+        dibujar();
+        let span = document.createElement("span");
+        span.innerText = n.valor + " ";
+        span.className = "current-val";
+        listaDiv.appendChild(span);
+        await new Promise(resolve => setTimeout(resolve, 500));
+        n.color = "#3498db";
+        dibujar();
     }
 }
 
-function limpiarColores(n) { if(n){ n.color="white"; limpiarColores(n.izq); limpiarColores(n.der); } }
+function limpiarColores(n) {
+    if (n) {
+        n.color = "white";
+        limpiarColores(n.izq);
+        limpiarColores(n.der);
+    }
+}
 
 canvas.addEventListener('wheel', (e) => {
-    e.preventDefault(); escala *= (e.deltaY > 0 ? 0.9 : 1.1); dibujar();
+    e.preventDefault();
+    escala *= (e.deltaY > 0 ? 0.9 : 1.1);
+    dibujar();
 }, { passive: false });
 
-canvas.addEventListener('mousedown', (e) => { estaArrastrando = true; ultimaPosMouse = { x: e.clientX, y: e.clientY }; });
+canvas.addEventListener('mousedown', (e) => {
+    estaArrastrando = true;
+    ultimaPosMouse = { x: e.clientX, y: e.clientY };
+});
+
 window.addEventListener('mousemove', (e) => {
     if (!estaArrastrando) return;
-    origenX += e.clientX - ultimaPosMouse.x; origenY += e.clientY - ultimaPosMouse.y;
-    ultimaPosMouse = { x: e.clientX, y: e.clientY }; dibujar();
+    origenX += e.clientX - ultimaPosMouse.x;
+    origenY += e.clientY - ultimaPosMouse.y;
+    ultimaPosMouse = { x: e.clientX, y: e.clientY };
+    dibujar();
 });
-window.addEventListener('mouseup', () => estaArrastrando = false);
-function reiniciar() { raiz = null; escala = 1; origenX = 0; origenY = 0; dibujar(); }
+
+window.addEventListener('mouseup', () => {
+    estaArrastrando = false;
+});
+
+function reiniciar() {
+    raiz = null;
+    escala = 1;
+    origenX = 0;
+    origenY = 0;
+    dibujar();
+}
