@@ -160,31 +160,42 @@ function agregarNodo() {
     actualizarYDibujar();
     input.value = '';
 }
+function evaluarArbol(n) {
+    if (!n) return 0;
+    if (!n.izq && !n.der) return parseFloat(n.valor);
+
+    let izq = evaluarArbol(n.izq);
+    let der = evaluarArbol(n.der);
+
+    if (n.valor === '+') return izq + der;
+    if (n.valor === '-') return izq - der;
+    if (n.valor === '*') return izq * der;
+    if (n.valor === '/') return izq / der;
+    if (n.valor === '^') return Math.pow(izq, der);
+    return 0;
+}
 
 function procesarExpresion() {
-    let exp = document.getElementById('nodoValor').value;
+    let input = document.getElementById('nodoValor');
+    let exp = input.value;
     if (!exp) return;
     modoMatematico = true;
 
-    // Detectar variables
     let variables = exp.match(/[a-zA-Z]/g);
     variables = variables ? [...new Set(variables)] : [];
     let valores = {};
 
-    // Preguntar valores al usuario
     variables.forEach(v => {
-        let val = prompt(`Que valor quieres darle a ${v}?`);
+        let val = prompt(`¿Qué valor quieres darle a ${v}?`);
         valores[v] = parseFloat(val);
     });
 
-    // Reemplazar variables por sus valores numericos
     for (let v in valores) {
         let regex = new RegExp(v, 'g');
         exp = exp.replace(regex, valores[v]);
     }
 
-    // Tokenizacion correcta (sin espacios)
-    const tokens = exp.replace(/\s+/g, '').match(/[0-9]+|[a-zA-Z]+|[\^+*/()-]/g);
+    const tokens = exp.replace(/\s+/g, '').match(/[0-9.]+|[a-zA-Z]+|[\^+*/()-]/g);
     if (!tokens) return;
 
     const prioridad = (op) => {
@@ -194,12 +205,10 @@ function procesarExpresion() {
         return 0;
     };
 
-    const salida = [];
-    const operadores = [];
+    const salida = [], operadores = [];
 
     tokens.forEach(t => {
-        // Acepta numeros y variables (aunque ya reemplazadas, podrian quedar letras)
-        if (/^[a-zA-Z0-9]+$/.test(t)) {
+        if (/^[0-9.]+$/.test(t) || /^[a-zA-Z]+$/.test(t)) {
             salida.push(new Nodo(t));
         } else if (t === '(') {
             operadores.push(t);
@@ -210,9 +219,8 @@ function procesarExpresion() {
                 n.izq = salida.pop();
                 salida.push(n);
             }
-            operadores.pop(); // quita '('
+            operadores.pop();
         } else {
-            // Operador
             while (
                 operadores.length &&
                 prioridad(operadores[operadores.length - 1]) >= prioridad(t)
@@ -235,6 +243,9 @@ function procesarExpresion() {
 
     raiz = salida[0];
     actualizarYDibujar();
+
+    const res = evaluarArbol(raiz);
+    document.getElementById('lista-nodos').innerHTML = `<strong>Resultado:</strong> ${res}`;
 }
 
 function cargarJSON(e) {
@@ -263,6 +274,15 @@ function cargarJSON(e) {
         }
     };
     reader.readAsText(e.target.files[0]);
+}
+function reiniciar() {
+    raiz = null;
+    escala = 1;
+    origenX = 0;
+    origenY = 0;
+    document.getElementById('nodoValor').value = '';
+    document.getElementById('lista-nodos').innerHTML = '';
+    dibujar();
 }
 
 canvas.addEventListener('click', (e) => {
