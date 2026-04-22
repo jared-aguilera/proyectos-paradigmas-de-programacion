@@ -112,7 +112,7 @@ body {
     margin-bottom: 10px;
 }
 
-.producto-nombr {
+.producto-nombre {
     font-size: 1.1rem;
     margin: 0 0 10px 0;
     font-weight: 600;
@@ -129,7 +129,7 @@ body {
     font-size: 0.85rem;
     color: #94a3b8;
     margin: 0 0 15px 0;
-    flex-grow: 1; /* Empuja el botón hasta abajo */
+    flex-grow: 1; /* Empuja el boton hasta abajo */
 }
 
 /* Botón de agregar */
