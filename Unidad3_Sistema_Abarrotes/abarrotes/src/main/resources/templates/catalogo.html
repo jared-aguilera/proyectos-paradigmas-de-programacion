@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Súper Abarrotes MVC</title>
+    
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <link rel="stylesheet" href="../static/css/estilos.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <h1> Super Abarrotes MVC</h1>
+        <a th:href="@{/carrito}" class="btn-carrito">Ver Carrito</a>
+    </nav>
+
+    <div class="contenedor">
+        <h2 class="titulo-seccion">Nuestros Productos</h2>
+
+        <div class="grid-productos">
+            
+            <div class="producto-tarjeta" th:each="p : ${productos}">
+                
+                <span class="categoria-etiqueta" th:text="${p.categoria}">Categoria</span>
+                
+                <div class="contenedor-imagen">
+                 /*   <img th:src="${p.imagenUrl}" src="" alt="Producto"> */
+                </div>
+
+                <h3 class="producto-nombre" th:text="${p.nombre}">Nombre del Producto</h3>
+                
+                <p class="producto-precio" th:text="'$' + ${p.precio}">$0.00</p>
+                
+                <p class="producto-stock" th:text="'Disponibles: ' + ${p.stock}">Disponibles: 0</p>
+                
+                <form th:action="@{/carrito/agregar}" method="POST">
+                    <input type="hidden" name="id" th:value="${p.id}">
+                    <button type="submit" class="btn-agregar">+ Agregar</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

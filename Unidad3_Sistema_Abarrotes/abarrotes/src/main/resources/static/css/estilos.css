@@ -1,0 +1,152 @@
+/* VARIABLES DE COLOR  */
+:root {
+    --color-primario: #0ea5e9;
+    --color-primario-oscuro: #0284c7;
+    --color-fondo: #f8fafc;
+    --color-texto: #334155;
+    --color-precio: #16a34a; 
+    --color-tarjeta: #ffffff;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    background-color: var(--color-tarjeta);
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--color-primario);
+}
+
+.btn-carrito {
+    background-color: var(--color-primario);
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.btn-carrito:hover {
+    background-color: var(--color-primario-oscuro);
+}
+
+/*  */
+.contenedor {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.titulo-seccion {
+    margin-bottom: 30px;
+    font-size: 2rem;
+    color: #1e293b;
+}
+
+.grid-productos {
+    display: grid;
+    /* caben los que quepan según la pantalla */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+/* TARJETAS DE PRODUCTOS  */
+.producto-tarjeta {
+    background-color: var(--color-tarjeta);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.producto-tarjeta:hover {
+    transform: translateY(-5px); /* Se levanta un poquito */
+    box-shadow: 0 12px 20px rgba(0,0,0,0.08);
+}
+
+.contenedor-imagen {
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.contenedor-imagen img {
+    max-height: 80%;
+    max-width: 80%;
+    object-fit: contain;
+}
+
+/*  Lacteos, Botanas) */
+.categoria-etiqueta {
+    background-color: #f1f5f9;
+    color: #64748b;
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    align-self: flex-start;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.producto-nombre {
+    font-size: 1.1rem;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+}
+
+.producto-precio {
+    font-size: 1.4rem;
+    color: var(--color-precio);
+    font-weight: 800;
+    margin: 0 0 5px 0;
+}
+
+.producto-stock {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin: 0 0 15px 0;
+    flex-grow: 1; /* Empuja el botón hasta abajo */
+}
+
+/* Botón de agregar */
+.btn-agregar {
+    width: 100%;
+    padding: 12px;
+    background-color: white;
+    color: var(--color-primario);
+    border: 2px solid var(--color-primario);
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-agregar:hover {
+    background-color: var(--color-primario);
+    color: white;
+}
