@@ -1,18 +1,19 @@
 package com.tienda.abarrotes.model;
 
-import com.tienda.abarrotes.patterns.observer.IStockObserver; // Corregido con 'r'
-import java.util.ArrayList;
+import java.util.ArrayList; // Corregido con 'r'
 import java.util.List;
+
+import com.tienda.abarrotes.patterns.observer.IStockObserver;
 import com.tienda.abarrotes.utils.SinStockException;
 
 public abstract class Producto {
     private String codigo;
     private String nombre;
     private double precioVenta;
-    private int stock;
+    private double stock;
     private List<IStockObserver> observadores = new ArrayList<>(); // Corregido
 
-    public Producto(String codigo, String nombre, double precioVenta, int stock) {
+    public Producto(String codigo, String nombre, double precioVenta, double stock) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.precioVenta = precioVenta;
@@ -25,7 +26,7 @@ public abstract class Producto {
         observadores.add(obs);
     }
     
-    public void vender(int cantidad) throws SinStockException {
+    public void vender(double cantidad) throws SinStockException {
         if (cantidad > this.stock) {
             throw new SinStockException("Sin existencias suficientes para: " + nombre);
         }
@@ -38,6 +39,6 @@ public abstract class Producto {
 
     public String getNombre() { return nombre; }
     public double getPrecioVenta() { return precioVenta; }
-    public int getStock() { return stock; }
+    public double getStock() { return stock; }
     public String getCodigo() { return codigo; }
 }
