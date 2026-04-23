@@ -16,5 +16,6 @@ public class Cliente {
     }
 
     public String getNombre() { return nombre; }
+    public String getTelefono() { return telefono; }
     public int getPuntosAcumulados() { return puntosAcumulados; }
 }
