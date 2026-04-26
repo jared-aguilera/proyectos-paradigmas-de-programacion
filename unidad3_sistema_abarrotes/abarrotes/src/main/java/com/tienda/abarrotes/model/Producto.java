@@ -1,6 +1,6 @@
 package com.tienda.abarrotes.model;
 
-import java.util.ArrayList; // Corregido con 'r'
+import java.util.ArrayList; 
 import java.util.List;
 
 import com.tienda.abarrotes.patterns.observer.IStockObserver;
@@ -11,7 +11,7 @@ public abstract class Producto {
     private String nombre;
     private double precioVenta;
     private double stock;
-    private List<IStockObserver> observadores = new ArrayList<>(); // Corregido
+    private List<IStockObserver> observadores = new ArrayList<>(); 
 
     public Producto(String codigo, String nombre, double precioVenta, double stock) {
         this.codigo = codigo;
@@ -21,8 +21,7 @@ public abstract class Producto {
     }
 
     public abstract double calcularImpuesto();
-
-    public void agregarObservador(IStockObserver obs) { // Corregido
+    public void agregarObservador(IStockObserver obs) {
         observadores.add(obs);
     }
     
@@ -32,7 +31,7 @@ public abstract class Producto {
         }
         this.stock -= cantidad;
 
-        for (IStockObserver obs : observadores) { // Corregido
+        for (IStockObserver obs : observadores) { 
             obs.notificar(this);
         }
     }
@@ -41,4 +40,6 @@ public abstract class Producto {
     public double getPrecioVenta() { return precioVenta; }
     public double getStock() { return stock; }
     public String getCodigo() { return codigo; }
+    public void setStock(double stock) {this.stock = stock;}
+    
 }

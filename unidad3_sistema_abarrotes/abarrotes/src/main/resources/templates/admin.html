@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administracion - Super Abarrotes</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+    <nav class="barra-navegacion">
+        <h1> Panel de Administracion</h1>
+        <a th:href="@{/productos}" class="btn-carrito">Volver a la Tienda</a>
+    </nav>
+
+    <div class="contenedor">
+        <h2 class="titulo-seccion">Gestion de Inventario</h2>
+        <div th:if="${mensaje}" style="background-color: #dcfce7; color: #166534; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; border: 1px solid #b9f6ca;">
+            <span th:text="${mensaje}"></span>
+        </div>
+
+        <div th:if="${error}" style="background-color: #fee2e2; color: #991b1b; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; border: 1px solid #fecaca;">
+            <span th:text="${error}"></span>
+        </div>
+
+        <div class="tarjeta-admin">
+            <h3> Registrar Nuevo Producto</h3>
+            <form th:action="@{/nuevo}" method="POST" class="formulario-flexible">
+                <div class="grupo-formulario">
+                    <label>Tipo de Venta</label>
+                    <select name="tipo" class="entrada-formulario">
+                        <option value="Unitario">Por Pieza (Unitario)</option>
+                        <option value="Granel">Por Peso (Granel)</option>
+                    </select>
+                </div>
+                <div class="grupo-formulario">
+                    <label>Codigo de Barras</label>
+                    <input type="text" name="codigo" placeholder="Ej. 020" required class="entrada-formulario">
+                </div>
+                <div class="grupo-formulario" style="flex-grow: 2;">
+                    <label>Nombre del Producto</label>
+                    <input type="text" name="nombre" placeholder="Nombre comercial" required class="entrada-formulario">
+                </div>
+                <div class="grupo-formulario">
+                    <label>Precio Venta</label>
+                    <input type="number" name="precio" placeholder="0.00" step="any" min="0.1" required class="entrada-formulario">
+                </div>
+                <div class="grupo-formulario">
+                    <label>Existencia Inicial</label>
+                    <input type="number" name="stock" min="1" placeholder="Cantidad" required class="entrada-formulario">
+                </div>
+                <button type="submit" class="btn-admin-registrar">Registrar Producto</button>
+            </form>
+        </div>
+
+        <div class="tarjeta-admin">
+            <h3>Entrada de Mercancia (Surtir)</h3>
+            <form th:action="@{/inventario/actualizar}" method="POST" class="formulario-flexible">
+                <div class="grupo-formulario">
+                    <label>Codigo del Producto</label>
+                    <input type="text" name="codigo" placeholder="Ingrese el código" required class="entrada-formulario">
+                </div>
+                <div class="grupo-formulario">
+                    <label>Cantidad que llego</label>
+                    <input type="number" name="cantidadExtra" min="1" placeholder="¿Cuanto entro al almacén?" required class="entrada-formulario">
+                </div>
+                <button type="submit" class="btn-admin-stock">+ Sumar al Inventario</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

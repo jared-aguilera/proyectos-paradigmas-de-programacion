@@ -3,45 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Abarrotes MVC</title>
-    
+    <title>Catalogo - Super Abarrotes</title>
     <link rel="stylesheet" th:href="@{/css/estilos.css}">
-    <link rel="stylesheet" href="../static/css/estilos.css">
 </head>
 <body>
-
-    <nav class="navbar">
-        <h1> Super Abarrotes MVC</h1>
+    <nav class="barra-navegacion">
+        <h1>Super Abarrotes MVC</h1>
         <a th:href="@{/carrito}" class="btn-carrito">Ver Carrito</a>
     </nav>
 
     <div class="contenedor">
+        <div th:if="${mensaje}" style="background-color: #dcfce7; color: #166534; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <span th:text="${mensaje}"></span>
+        </div>
+        <div th:if="${error}" style="background-color: #fee2e2; color: #991b1b; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <span th:text="${error}"></span>
+        </div>
+
         <h2 class="titulo-seccion">Nuestros Productos</h2>
 
-        <div class="grid-productos">
-            
-            <div class="producto-tarjeta" th:each="p : ${productos}">
+        <div class="cuadricula-productos">
+            <div class="tarjeta-producto" th:each="p : ${productos}">
                 
-                <span class="categoria-etiqueta" th:text="${p.categoria}">Categoria</span>
+                <span class="etiqueta-categoria" th:text="'Ref: ' + ${p.codigo}">Ref: 000</span>
                 
-                <div class="contenedor-imagen">
-                 /*   <img th:src="${p.imagenUrl}" src="" alt="Producto"> */
+                <div class="contenedor-img">
+                    <img th:src="|/img/${p.codigo}.png|" alt="Producto">
                 </div>
 
-                <h3 class="producto-nombre" th:text="${p.nombre}">Nombre del Producto</h3>
+                <h3 class="producto-nombre" th:text="${p.nombre}">Nombre</h3>
+                <p class="producto-precio" th:text="'$' + ${p.precioVenta}">$0.00</p>
+                <p class="producto-stock" th:text="'Disponibles: ' + ${p.stock}">Stock: 0</p>
                 
-                <p class="producto-precio" th:text="'$' + ${p.precio}">$0.00</p>
-                
-                <p class="producto-stock" th:text="'Disponibles: ' + ${p.stock}">Disponibles: 0</p>
-                
-                <form th:action="@{/carrito/agregar}" method="POST">
-                    <input type="hidden" name="id" th:value="${p.id}">
-                    <button type="submit" class="btn-agregar">+ Agregar</button>
+                <form th:action="@{/carrito/agregar}" method="POST" style="display: flex; gap: 10px; margin-top: 10px;">
+                    <input type="hidden" name="nombre" th:value="${p.nombre}">
+                    <input type="number" name="cantidad" value="1" min="1" th:max="${p.stock}" style="width: 60px; border-radius: 6px; border: 1px solid #ccc; text-align: center;">
+                    <button type="submit" class="btn-agregar">Agregar</button>
                 </form>
             </div>
-
         </div>
     </div>
-
 </body>
 </html>

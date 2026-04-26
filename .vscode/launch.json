@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-AbarrotesApplication<abarrotes>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.tienda.abarrotes.AbarrotesApplication",
+            "projectName": "abarrotes",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

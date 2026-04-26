@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket - Super Abarrotes</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body style="background-color: #f1f5f9;">
+    <nav class="barra-navegacion">
+        <h1>Super Abarrotes MVC</h1>
+        <a th:href="@{/productos}" class="btn-carrito">Nueva Venta</a>
+    </nav>
+
+    <div class="ticket-impreso">
+        <h2 style="margin-top: 0; text-align: center;">-- TICKET --</h2>
+        <p style="text-align: center;">¡Gracias por tu compra!</p>
+        <p style="text-align: center;" th:text="${#calendars.format(#calendars.createNow(), 'dd/MM/yyyy HH:mm')}"></p>
+        <p style="text-align: center;">
+            <strong>Cliente: </strong> 
+            <span th:text="${clienteNombre}">Nombre del Cliente</span></p>
+        <div class="linea-separadora"></div>
+        
+        <div class="articulo-ticket" th:each="item : ${venta.listaItems}">
+            <span th:text="${item.cantidad} + 'x ' + ${item.producto.nombre}">1x Articulo</span>
+            <span th:text="'$' + ${item.calcularSubtotal()}">$0.00</span>
+        </div>
+        
+        <div class="linea-separadora"></div>
+
+        <h3 style="text-align: right;" th:text="'TOTAL: $' + ${venta.calcularTotalVenta()}">TOTAL: $0.00</h3>
+        
+        <p style="margin-top: 20px; font-size: 0.8rem; text-align: center;">*** VUELVA PRONTO ***</p>
+        
+        <button onclick="window.print()" class="btn-agregar btn-imprimir" style="margin-top: 20px;">🖨️ Imprimir Ticket</button>
+    </div>
+</body>
+</html>

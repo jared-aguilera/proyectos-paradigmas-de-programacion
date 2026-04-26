@@ -4,15 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Carrito - Súper Abarrotes</title>
-    
     <link rel="stylesheet" th:href="@{/css/estilos.css}">
-    <link rel="stylesheet" href="../static/css/estilos.css">
 </head>
 <body>
-
-    <nav class="navbar">
+    <nav class="barra-navegacion">
         <h1>🛒 Súper Abarrotes MVC</h1>
-        <a href="/catalogo" class="btn-carrito">← Seguir comprando</a>
+        <a th:href="@{/productos}" class="btn-carrito">← Seguir comprando</a>
     </nav>
 
     <div class="contenedor">
@@ -24,63 +21,45 @@
                     <th>Producto</th>
                     <th>Precio Unitario</th>
                     <th>Cantidad</th>
-                    <th>Subtotal</th>
-                    <th>Acción</th>
+                    <th>Subtotal (Con Impuesto)</th>
                 </tr>
             </thead>
             <tbody>
-                
-                <tr>
+                <tr th:each="item : ${venta.listaItems}">
                     <td>
-                        <div class="item-info">
-                            <img src="https://cdn-icons-png.flaticon.com/512/3173/3173426.png" alt="Gansito">
-                            <span class="producto-nombre">Gansito Marinela</span>
+                        <div class="info-articulo">
+                            <img th:src="|/img/${item.producto.codigo}.png|" alt="Producto">
+                            <span class="producto-nombre" th:text="${item.producto.nombre}">Producto</span>
                         </div>
                     </td>
-                    <td>$25.00</td>
-                    <td><strong>2</strong></td>
-                    <td class="producto-precio">$50.00</td>
+                    <td th:text="'$' + ${item.producto.precioVenta}">$0.00</td>
+                    <td th:text="${item.cantidad}">1</td>
+                    <td class="producto-precio" th:text="'$' + ${item.calcularSubtotal()}">$0.00</td>
                     <td>
-                        <button class="btn-eliminar">X Eliminar</button>
+                        <form th:action="@{/carrito/eliminar}" method="POST">
+                            <input type="hidden" name="codigo" th:value="${item.producto.codigo}">
+                            <button type="submit" class="btn-eliminar"> Quitar</button>
+                        </form>
                     </td>
                 </tr>
-
-                <tr>
-                    <td>
-                        <div class="item-info">
-                            <img src="https://cdn-icons-png.flaticon.com/512/869/869466.png" alt="Leche">
-                            <span class="producto-nombre">Leche Alpura 1L</span>
-                        </div>
-                    </td>
-                    <td>$28.50</td>
-                    <td><strong>1</strong></td>
-                    <td class="producto-precio">$28.50</td>
-                    <td>
-                        <button class="btn-eliminar">X Eliminar</button>
-                    </td>
-                </tr>
-
             </tbody>
         </table>
 
         <div class="resumen-carrito">
-            <div class="resumen-fila">
-                <span>Subtotal:</span>
-                <span>$78.50</span>
-            </div>
-            <div class="resumen-fila" style="color: #ef4444;">
-                <span>Descuento (Promo):</span>
-                <span>-$0.00</span>
-            </div>
             <div class="resumen-fila resumen-total">
-                <span>TOTAL:</span>
-                <span>$78.50</span>
+                <span>TOTAL A PAGAR:</span>
+                <span th:text="'$' + ${venta.calcularTotalVenta()}">$0.00</span>
             </div>
             
-            <button class="btn-comprar">PAGAR AHORA</button>
+            <form th:action="@{/cobrar}" method="POST">
+                <div style="margin-top: 20px; border-top: 2px solid #e2e8f0; padding-top: 15px;">
+                    <label style="font-weight: bold; color: #334155; font-size: 0.9rem;"> Asignar Cliente :</label>
+                    <input type="text" name="nombreCliente" placeholder="Nombre o Teléfono del Cliente" 
+                           style="width: 100%; padding: 10px; margin-top: 8px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                </div>
+                <button type="submit" class="btn-comprar">PAGAR AHORA</button>
+            </form>
         </div>
-
     </div>
-
 </body>
 </html>

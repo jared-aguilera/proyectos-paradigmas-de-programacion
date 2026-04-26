@@ -9,6 +9,10 @@ public class Venta {
     public void agregarItem(Producto p, int cant) {
         listaItems.add(new DetalleVenta(p, cant));
     }
+    
+    public void eliminarItem(String codigo) {
+        listaItems.removeIf(item -> item.getProducto().getCodigo().equals(codigo));
+    }
 
     public double calcularTotalVenta() {
         double total = 0;
