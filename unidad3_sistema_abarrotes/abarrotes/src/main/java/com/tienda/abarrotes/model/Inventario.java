@@ -28,7 +28,11 @@ public class Inventario {
         productos.add(ProductoFactory.crearProducto("Unitario", "015", "Jabon Zote Rosa 400g", 22.00, 45));
         productos.add(ProductoFactory.crearProducto("Unitario", "016", "Detergente Foca 1Kg", 38.50, 30));
         productos.add(ProductoFactory.crearProducto("Unitario", "017", "Papel Higienico Petalo 4pz", 35.00, 25));
-
+        
+        com.tienda.abarrotes.patterns.observer.AlertaBajoStock alerta = new com.tienda.abarrotes.patterns.observer.AlertaBajoStock();
+        for (Producto p : productos) {
+            p.agregarObservador(alerta);
+        }
     }
 
     public static Inventario getInstancia() {

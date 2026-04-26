@@ -21,7 +21,6 @@ public abstract class Producto {
     }
 
     public abstract double calcularImpuesto();
-
     public void agregarObservador(IStockObserver obs) {
         observadores.add(obs);
     }

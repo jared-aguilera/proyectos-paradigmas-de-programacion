@@ -11,7 +11,6 @@ public class Venta {
     }
     
     public void eliminarItem(String codigo) {
-        // Busca en la lista el item que tenga ese código y lo borra mágicamente
         listaItems.removeIf(item -> item.getProducto().getCodigo().equals(codigo));
     }
 
