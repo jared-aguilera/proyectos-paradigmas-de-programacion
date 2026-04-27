@@ -366,3 +366,91 @@ TICKET
 .btn-admin-registrar:hover, .btn-admin-stock:hover {
     opacity: 0.9;
 }
+
+/* Contenedor de la sección de descuentos */
+.seccion-descuentos {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f8fafc;
+    border: 2px dashed #e2e8f0;
+    border-radius: 10px;
+}
+
+.promo-titulo {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #64748b;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.botones-descuento {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-promo {
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.btn-promo:hover {
+    transform: scale(1.05);
+}
+
+.btn-verde { background-color: #10b981; color: white; }
+.btn-azul  { background-color: #3b82f6; color: white; }
+.btn-gris  { background-color: #94a3b8; color: white; }
+
+.monto-final {
+    color: #16a34a;
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.formulario-cobro {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 2px solid #e2e8f0;
+}
+
+.campo-cliente {
+    margin-bottom: 20px;
+}
+
+.campo-cliente label {
+    display: block;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.campo-cliente input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.btn-comprar {
+    width: 100%;
+    background-color: #1e293b; 
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-comprar:hover {
+    background-color: #0f172a;
+}

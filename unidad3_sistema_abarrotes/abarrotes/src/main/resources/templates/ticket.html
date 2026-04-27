@@ -23,16 +23,16 @@
         
         <div class="articulo-ticket" th:each="item : ${venta.listaItems}">
             <span th:text="${item.cantidad} + 'x ' + ${item.producto.nombre}">1x Articulo</span>
-            <span th:text="'$' + ${item.calcularSubtotal()}">$0.00</span>
+            <td th:text="'$' + ${#numbers.formatDecimal(item.calcularSubtotal(), 1, 2)}"></td>
         </div>
         
         <div class="linea-separadora"></div>
 
-        <h3 style="text-align: right;" th:text="'TOTAL: $' + ${venta.calcularTotalVenta()}">TOTAL: $0.00</h3>
+        <h3 style="text-align: right;" th:text="'TOTAL: $' + ${#numbers.formatDecimal(venta.calcularTotalVenta(), 1, 2)}">TOTAL: $0.00</h3>
         
         <p style="margin-top: 20px; font-size: 0.8rem; text-align: center;">*** VUELVA PRONTO ***</p>
         
-        <button onclick="window.print()" class="btn-agregar btn-imprimir" style="margin-top: 20px;">🖨️ Imprimir Ticket</button>
+        <button onclick="window.print()" class="btn-agregar btn-imprimir" style="margin-top: 20px;"> Imprimir Ticket</button>
     </div>
 </body>
 </html>

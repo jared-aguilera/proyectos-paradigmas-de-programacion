@@ -11,6 +11,8 @@ import com.tienda.abarrotes.model.DetalleVenta;
 import com.tienda.abarrotes.model.Inventario;
 import com.tienda.abarrotes.model.Producto;
 import com.tienda.abarrotes.model.Venta;
+import com.tienda.abarrotes.patterns.strategy.DescuentoFijo;
+import com.tienda.abarrotes.patterns.strategy.DescuentoPorcentaje;
 @Controller
 public class VentasController {
     private Venta ventaActual = new Venta();
@@ -53,4 +55,25 @@ public class VentasController {
         ventaActual.eliminarItem(codigo);
         return "redirect:/carrito";
     }
+
+    @PostMapping("/carrito/modificar")
+    public String modificarDelCarrito(@RequestParam String codigo, @RequestParam int cantidad) {
+        ventaActual.modificarCantidad(codigo, cantidad);
+        return "redirect:/carrito";
+    }
+
+    @PostMapping("/carrito/descuento")
+public String aplicarDescuento(@RequestParam String tipo, @RequestParam double valor, RedirectAttributes flash) {
+    if (tipo.equals("PORCENTAJE")) {
+        ventaActual.setEstrategia(new DescuentoPorcentaje(valor));
+        flash.addFlashAttribute("mensaje", "Descuento del " + valor + "% aplicado.");
+    } else if (tipo.equals("FIJO")) {
+        ventaActual.setEstrategia(new DescuentoFijo(valor));
+        flash.addFlashAttribute("mensaje", "Descuento de $" + valor + " aplicado.");
+    } else {
+        ventaActual.setEstrategia((total) -> total);
+    }
+    
+    return "redirect:/carrito";
+}
 }
