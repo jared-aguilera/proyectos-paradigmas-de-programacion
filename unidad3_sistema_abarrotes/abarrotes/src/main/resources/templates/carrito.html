@@ -8,7 +8,7 @@
 </head>
 <body>
     <nav class="barra-navegacion">
-        <h1>🛒 Súper Abarrotes MVC</h1>
+        <h1>SUper Abarrotes MVC</h1>
         <a th:href="@{/productos}" class="btn-carrito">← Seguir comprando</a>
     </nav>
 
@@ -25,41 +25,77 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="item : ${venta.listaItems}">
-                    <td>
-                        <div class="info-articulo">
-                            <img th:src="|/img/${item.producto.codigo}.png|" alt="Producto">
-                            <span class="producto-nombre" th:text="${item.producto.nombre}">Producto</span>
-                        </div>
-                    </td>
-                    <td th:text="'$' + ${item.producto.precioVenta}">$0.00</td>
-                    <td th:text="${item.cantidad}">1</td>
-                    <td class="producto-precio" th:text="'$' + ${item.calcularSubtotal()}">$0.00</td>
-                    <td>
-                        <form th:action="@{/carrito/eliminar}" method="POST">
-                            <input type="hidden" name="codigo" th:value="${item.producto.codigo}">
-                            <button type="submit" class="btn-eliminar"> Quitar</button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
+    <tr th:each="item : ${venta.listaItems}">
+        <td>
+            <div class="info-articulo">
+                <img th:src="|/img/${item.producto.codigo}.png|" alt="Producto">
+                <span class="producto-nombre" th:text="${item.producto.nombre}">Producto</span>
+            </div>
+        </td>
+        <td th:text="'$' + ${item.producto.precioVenta}">$0.00</td>
+        
+        <td>
+            <form th:action="@{/carrito/modificar}" method="POST" style="display: flex; align-items: center; gap: 5px;">
+                <input type="hidden" name="codigo" th:value="${item.producto.codigo}">
+                <input type="number" name="cantidad" th:value="${item.cantidad}" min="1" 
+                       style="width: 60px; padding: 5px; border-radius: 4px; border: 1px solid #cbd5e1; text-align: center;">
+                <button type="submit" style="background-color: #3b82f6; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer;">
+                </button>
+            </form>
+        </td>
+        <td class="producto-precio" th:text="'$' + ${#numbers.formatDecimal(item.calcularSubtotal(), 1, 2)}">$0.00</td>
+        <td>
+            <form th:action="@{/carrito/eliminar}" method="POST">
+                <input type="hidden" name="codigo" th:value="${item.producto.codigo}">
+                <button type="submit" class="btn-eliminar"> Quitar</button>
+            </form>
+        </td>
+    </tr>
+</tbody>
         </table>
 
         <div class="resumen-carrito">
-            <div class="resumen-fila resumen-total">
-                <span>TOTAL A PAGAR:</span>
-                <span th:text="'$' + ${venta.calcularTotalVenta()}">$0.00</span>
-            </div>
-            
-            <form th:action="@{/cobrar}" method="POST">
-                <div style="margin-top: 20px; border-top: 2px solid #e2e8f0; padding-top: 15px;">
-                    <label style="font-weight: bold; color: #334155; font-size: 0.9rem;"> Asignar Cliente :</label>
-                    <input type="text" name="nombreCliente" placeholder="Nombre o Teléfono del Cliente" 
-                           style="width: 100%; padding: 10px; margin-top: 8px; border-radius: 6px; border: 1px solid #cbd5e1;">
-                </div>
-                <button type="submit" class="btn-comprar">PAGAR AHORA</button>
+    <div class="resumen-fila">
+        <span>Subtotal:</span>
+        <span th:text="'$' + ${#numbers.formatDecimal(venta.calcularTotalVenta(), 1, 2)}">$0.00</span>
+    </div>
+
+    <div class="seccion-descuentos">
+        <p class="promo-titulo">APLICAR DESCUENTO:</p>
+        <div class="botones-descuento">
+            <form th:action="@{/carrito/descuento}" method="POST">
+                <input type="hidden" name="tipo" value="PORCENTAJE">
+                <input type="hidden" name="valor" value="10">
+                <button type="submit" class="btn-promo btn-verde">10% OFF</button>
+            </form>
+
+            <form th:action="@{/carrito/descuento}" method="POST">
+                <input type="hidden" name="tipo" value="FIJO">
+                <input type="hidden" name="valor" value="50">
+                <button type="submit" class="btn-promo btn-azul">-$50.00</button>
+            </form>
+
+            <form th:action="@{/carrito/descuento}" method="POST">
+                <input type="hidden" name="tipo" value="NINGUNO">
+                <input type="hidden" name="valor" value="0">
+                <button type="submit" class="btn-promo btn-gris">Limpiar</button>
             </form>
         </div>
+    </div>
+
+    <div class="resumen-fila resumen-total">
+        <span>TOTAL A PAGAR:</span>
+        <span class="monto-final" th:text="'$' + ${#numbers.formatDecimal(venta.calcularTotalFinal(), 1, 2)}">$0.00</span>
+    </div>
+    
+    <form th:action="@{/cobrar}" method="POST" class="formulario-cobro">
+        <div class="campo-cliente">
+            <label>Asignar Cliente:</label>
+            <input type="text" name="nombreCliente" placeholder="Nombre o Teléfono del Cliente">
+        </div>
+        <button type="submit" class="btn-comprar">PAGAR AHORA</button>
+    </form>
+</div>
     </div>
 </body>
 </html>

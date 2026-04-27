@@ -1,6 +1,6 @@
 package com.tienda.abarrotes.patterns.strategy;
 
-// Implementación para restar un monto fijo (ej. $20 pesos menos) [cite: 50]
+// Implementacion para restar un monto fijo (ej. $20 pesos menos)
 public class DescuentoFijo implements IEstrategiaDescuento {
     private double monto;
 
