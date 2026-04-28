@@ -43,5 +43,27 @@
             </div>
         </div>
     </div>
+    <script>
+    document.querySelectorAll('form').forEach(form => {
+        if(form.getAttribute('action').includes('/carrito/agregar')) {
+            
+            form.addEventListener('submit', function(evento) {
+                evento.preventDefault();
+                fetch(this.action, {
+                    method: 'POST',body: new FormData(this)
+                }).then(() => {
+                    let boton = this.querySelector('button');
+                    let textoOriginal = boton.innerText;
+                    
+                    boton.innerText = "¡Agregado! ";
+                    boton.style.backgroundColor = "#10b981"; 
+                    boton.style.color = "white";
+                    setTimeout(() => {
+                        boton.innerText = textoOriginal; boton.style.backgroundColor = ""; }, 1500);
+                });
+            });
+        }
+    });
+</script>
 </body>
 </html>

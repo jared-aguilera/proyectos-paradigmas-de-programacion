@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Super Abarrotes</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f1f5f9;">
+
+    <div class="tarjeta-admin" style="width: 100%; max-width: 400px; padding: 30px; text-align: center;">
+        <h2 style="color: #1e293b; margin-bottom: 20px;"> Acceso Administrativo</h2>
+        
+        <div th:if="${error}" style="background-color: #fee2e2; color: #991b1b; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+            <span th:text="${error}"></span>
+        </div>
+
+        <form th:action="@{/login}" method="POST">
+            <div style="margin-bottom: 15px; text-align: left;">
+                <label style="font-weight: bold; color: #475569;">Usuario</label>
+                <input type="text" name="usuario" required class="entrada-formulario" placeholder="Escribe: admin">
+            </div>
+            <div style="margin-bottom: 25px; text-align: left;">
+                <label style="font-weight: bold; color: #475569;">Contraseña</label>
+                <input type="password" name="password" required class="entrada-formulario" placeholder="Escribe: 1234">
+            </div>
+            <button type="submit" class="btn-comprar" style="width: 100%;">Iniciar Sesion</button>
+        </form>
+        
+        <a th:href="@{/productos}" style="display: block; margin-top: 15px; color: #3b82f6; text-decoration: none;">← Volver a la tienda</a>
+    </div>
+
+</body>
+</html>
