@@ -9,7 +9,7 @@ public class DetalleVenta {
         this.cantidad = cantidad;
     }
 
-    // Polimorfismo: Calcula el subtotal usando el impuesto específico de cada producto 
+    // Polimorfismo: Calcula el subtotal usando el impuesto especifico de cada producto 
     public double calcularSubtotal() {
         double precioConImpuesto = producto.getPrecioVenta() + producto.calcularImpuesto();
         return precioConImpuesto * cantidad;

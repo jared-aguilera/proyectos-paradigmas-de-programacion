@@ -10,6 +10,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.tienda.abarrotes.model.Inventario;
 import com.tienda.abarrotes.model.Producto;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class InventarioController {
 
@@ -19,10 +21,30 @@ public class InventarioController {
         return "catalogo"; 
     }
 
+    @GetMapping("/login")
+    public String mostrarLogin() {
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String procesarLogin(@RequestParam String usuario, @RequestParam String password, HttpSession session, RedirectAttributes flash) {
+        if (usuario.equals("admin") && password.equals("1234")) {
+            session.setAttribute("adminLogueado", true); 
+            return "redirect:/admin";
+        } else {
+            flash.addFlashAttribute("error", "Usuario o contraseña incorrectos.");
+            return "redirect:/login";
+        }
+    }
     @GetMapping("/admin")
-    public String mostrarAdmin() {
+    public String mostrarAdmin(HttpSession session) {
+        // Verificamos si la llave "adminLogueado" existe en la sesión
+        if (session.getAttribute("adminLogueado") == null) {
+            return "redirect:/login"; // Si no está logueado, lo pateamos al login
+        }
         return "admin";
     }
+    
     @PostMapping("/nuevo")
     public String registrarProducto(@RequestParam String tipo, @RequestParam String codigo, 
                                     @RequestParam String nombre, @RequestParam double precio,
@@ -30,7 +52,7 @@ public class InventarioController {
 
         boolean yaExiste = Inventario.getInstancia().getProductos().stream().anyMatch(p -> p.getCodigo().equals(codigo));
         if (yaExiste) {
-            flash.addFlashAttribute("error", "Error: El código '" + codigo + "' ya existe");
+            flash.addFlashAttribute("error", "Error: El codigo '" + codigo + "' ya existe");
             return "redirect:/admin";
         }
         com.tienda.abarrotes.patterns.factory.ProductoFactory factory = new com.tienda.abarrotes.patterns.factory.ProductoFactory();

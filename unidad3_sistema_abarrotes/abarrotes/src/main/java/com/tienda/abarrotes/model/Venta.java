@@ -14,7 +14,6 @@ public class Venta {
         this.estrategia = estrategia;
     }
 
-    // 2. Suma bruta de todos los productos
     public double calcularTotalVenta() {
         double total = 0;
         for (DetalleVenta item : listaItems) {
@@ -23,13 +22,11 @@ public class Venta {
         return total;
     }
 
-    // 3. El gran final: Aplica la estrategia elegida
     public double calcularTotalFinal() {
         double subtotal = calcularTotalVenta();
         return estrategia.aplicarDescuento(subtotal);
     }
 
-    // --- Gestión del Carrito ---
     public List<DetalleVenta> getListaItems() { return listaItems; }
 
     public void agregarItem(Producto p, int cant) {
