@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Experto Médico</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="main-title">Sistema Experto Medico</h1>
+            <p class="subtitle">Motor de Inferencia en Prolog • Interfaz Web</p>
+            <div class="divider"></div>
+        </header>
+
+        <main class="content-single">
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Consulta de Paciente</h2>
+                </div>
+                <div class="panel-content">
+                    <p>Seleccione los sintomas que presenta el paciente actualmente:</p>
+                    
+                    <form id="sintomas-form">
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox" value="fiebre"> Fiebre</label>
+                            <label><input type="checkbox" value="tos"> Tos</label>
+                            <label><input type="checkbox" value="cansancio"> Cansancio</label>
+                            <label><input type="checkbox" value="dolor_cuerpo"> Dolor de Cuerpo</label>
+                            <label><input type="checkbox" value="congestion"> Congestión</label>
+                            <label><input type="checkbox" value="estornudos"> Estornudos</label>
+                            <label><input type="checkbox" value="picazon_ojos"> Picazón de Ojos</label>
+                            <label><input type="checkbox" value="lagrimeo"> Lagrimeo</label>
+                            <label><input type="checkbox" value="nauseas"> Náuseas</label>
+                            <label><input type="checkbox" value="vomito"> Vómito</label>
+                            <label><input type="checkbox" value="diarrea"> Diarrea</label>
+                            <label><input type="checkbox" value="dolor_cabeza"> Dolor de Cabeza</label>
+                            <label><input type="checkbox" value="escalofrios"> Escalofríos</label>
+                            <label><input type="checkbox" value="perdida_olfato"> Pérdida de Olfato</label>
+                            <label><input type="checkbox" value="palidez"> Palidez</label>
+                        </div>
+                        
+                        <button type="submit" class="btn-submit" id="btn-diagnosticar">
+                            Obtener Diagnostico
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="panel" id="panel-resultados" style="display: none;">
+                <div class="panel-header">
+                    <h2>Resultado del Diagnostico</h2>
+                </div>
+                <div class="panel-content">
+                    <div class="diagnostico-destacado">
+                        Diagnostico inferido: <span id="txt-enfermedad" class="highlight-green">Esperando...</span>
+                    </div>
+
+                    <h3 class="chapter-title" style="margin-top: 1.5rem;">Justificacion Medica</h3>
+                    <p class="chapter-desc" style="color: var(--text-primary); font-weight: 500;">
+                        Asi es como el sistema llego a esta conclusion:
+                    </p>
+                    
+                    <div class="terminal-mockup">
+                        <div class="terminal-text" id="txt-explicacion">
+                            </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
